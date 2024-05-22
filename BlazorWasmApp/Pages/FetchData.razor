@@ -1,0 +1,32 @@
+@page "/fetchdata"
+
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<h3>Fetch data from Express API</h3>
+
+<ul>
+    @if (forecasts != null)
+    {
+        @foreach (var forecast in forecasts)
+        {
+            <li>@forecast.Date: @forecast.Summary, @forecast.TemperatureC °C</li>
+        }
+    }
+</ul>
+
+@code {
+    private List<WeatherForecast> forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<List<WeatherForecast>>("https://fluffy-space-disco-jj45px69vx4p3pwq7-3000.app.github.dev/weatherforecast");
+    }
+
+    public class WeatherForecast
+    {
+        public string Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string Summary { get; set; }
+    }
+}
